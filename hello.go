@@ -37,6 +37,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		TableName: aws.String("impressions"),
 	}
 
+
+
 	result, error := svc.PutItem(params)
 	fmt.Println(result)
 	if error != nil {

@@ -2,13 +2,15 @@ package main
 
 import (
 	"net/http"
-	"fmt"
 	"bytes"
 	"github.com/nu7hatch/gouuid"
 	"log"
+	"time"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
+	//defer un(trace("Request"))
+
 	u, err1 := uuid.NewV4()
 
 	if err1 != nil {
@@ -16,9 +18,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	url := "https://search-testgo-lxx2ybjkefof4w57ou5wg62csa.us-east-1.es.amazonaws.com/hello/foo/"+u.String()
-	fmt.Println("URL:>", url)
 
-	var jsonStr = []byte(`{"user" : "kimchy", "post_date" : "2017-02-11T14:12:12","message" : "trying out Elasticsearch"}`)
+	var jsonStr = []byte(`{"type" : "log", "post_date" : "`+time.Now().Format("2006-01-02")+`",  "message": "trying out Elasticsearch"}`)
 	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(jsonStr))
 	req.Header.Set("Content-Type", "application/json")
 
@@ -28,11 +29,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	defer resp.Body.Close()
-
-	//fmt.Println("response Status:", resp.Status)
-	//fmt.Println("response Headers:", resp.Header)
-	//body, _ := ioutil.ReadAll(resp.Body)
-	//fmt.Println("response Body:", string(body))
 }
 
 func main() {
